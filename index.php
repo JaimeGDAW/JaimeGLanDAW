@@ -10,12 +10,24 @@
         case 'usuarios':
             //Cargamos la sección usuarios
 
-
+            $url_form = '/usuarios/alta';
             switch($_GET ['oper'])
             {
+                case 'modi':
+
+                    
+
+                    $id = $_GET['pagina'];
+
+                    $url_form = '/usuarios/modi/'.$id;
+
                 case 'alta':
 
-                    $boton_alta = "<input type=\"submit\" class=\"theme-primary btn-solid btn-styled\" value=\"Alta de usuario\" />";
+                    
+
+                    define("OPERACION", $_GET ['oper']=='modi'?'Modificación': 'Alta' );
+
+                    $boton_alta = "<input type=\"submit\" class=\"theme-primary btn-solid btn-styled\" value=\"". OPERACION ." de usuario\" />";
                     
                     $errores = false;
                     $disabled = '';
@@ -91,39 +103,88 @@
 
                             $disabled = " disabled=\"disabled\" ";
 
-                            $query = new Query("
-                                INSERT INTO usuarios
-                                (
-                                     nombre    
-                                    ,apellido1 
-                                    ,apellido2 
-                                    ,fecha_nacimiento 
-                                    ,email 
 
-                                    ,fecha_alta   
-                                    ,ip_alta      
-                                    ,fecha_modi   
-                                    ,ip_modi      
-                                )
-                                VALUES
-                                (
-                                     '". $_POST['nombre']           ."'
-                                    ,'". $_POST['apellido1']        ."'
-                                    ,'". $_POST['apellido2']        ."'
-                                    ,'". $_POST['fecha_nacimiento'] ."'
-                                    ,'". $_POST['email']            ."'
+                            switch($_GET['oper'])
+                            {
+                                case 'alta':
+                                    $query = new Query("
+                                        INSERT INTO usuarios
+                                        (
+                                            nombre    
+                                            ,apellido1 
+                                            ,apellido2 
+                                            ,fecha_nacimiento 
+                                            ,email 
+
+                                            ,fecha_alta   
+                                            ,ip_alta      
+                                            ,fecha_modi   
+                                            ,ip_modi      
+                                        )
+                                        VALUES
+                                        (
+                                            '". $_POST['nombre']           ."'
+                                            ,'". $_POST['apellido1']        ."'
+                                            ,'". $_POST['apellido2']        ."'
+                                            ,'". $_POST['fecha_nacimiento'] ."'
+                                            ,'". $_POST['email']            ."'
 
 
-                                    ,now()
-                                    ,'". $_SERVER['SERVER_ADDR']    ."'
-                                    ,now()
-                                    ,'". $_SERVER['SERVER_ADDR']    ."'
+                                            ,now()
+                                            ,'". $_SERVER['SERVER_ADDR']    ."'
+                                            ,now()
+                                            ,'". $_SERVER['SERVER_ADDR']    ."'
+                                            
+                                        )
                                     
-                                )
-                            
-                            ");
+                                    ");
+                                break;
+                                case 'modi':
+
+                                    $query = new Query("
+                                        UPDATE usuarios
+
+                                        SET
+                                             nombre             = '". $_POST['nombre']           ."'
+                                            ,apellido1          = '". $_POST['apellido1']        ."'
+                                            ,apellido2          = '". $_POST['apellido2']        ."'
+                                            ,fecha_nacimiento   = '". $_POST['fecha_nacimiento'] ."'
+                                            ,email              = '". $_POST['email']            ."'
+
+                                            ,fecha_modi         = now()
+                                            ,ip_modi            = '". $_SERVER['SERVER_ADDR']    ."'
+
+                                        WHERE id = '{$id}'
+                                    
+                                    ");
+
+
+
+                                break;
+                            }
                             
                         }
+
+
+
+                    }
+                    elseif(!empty($id))
+                    {
+                        $query = new Query("
+                            SELECT * 
+                            FROM   usuarios
+                            WHERE  id = '{$id}'
+                        ");
+
+                        $registro = $query->recuperar();
+
+                        $_POST['id']               = $registro['id'];
+                        $_POST['nombre']           = $registro['nombre'];
+                        $_POST['apellido1']        = $registro['apellido1'];
+                        $_POST['apellido2']        = $registro['apellido2'];
+                        $_POST['email']            = $registro['email'];
+                        $_POST['fecha_nacimiento'] = $registro['fecha_nacimiento'];
+                        $_POST['fecha_nacimiento'] = $registro['fecha_nacimiento'];
 
 
 
@@ -133,12 +194,14 @@
 
                     echo "
                         <a href=\"/usuarios/listado/0\" class=\"btn-solid theme-info mb-5\">Volver <i class=\"bi bi-arrow-return-left\"></i></a>
-                        <h1>Alta de usuarios</h1>
+                        <h1>". OPERACION ." de usuarios</h1>
                         {$mensajes_errores}
                         {$mensaje_exito}
-                        <form action=\"/usuarios/alta\" method=\"POST\">
+                        <form action=\"{$url_form}\" method=\"POST\">
 
                             <input type=\"hidden\" name=\"paso\" value=\"1\" />
+
+                            <input type=\"hidden\" name=\"id\" value=\"{$_POST['id']}\" />
 
                             <div class=\"form-field mb-4 {$_error_nombre}\">
                                 <label for=\"nombreID\" class=\"form-label\">Nombre</label>
@@ -229,9 +292,11 @@
                     while ($registro = $query->recuperar())
                     {
 
+                        $modificacion = "<a class=\"theme-primary btn-solid btn-styled\" href=\"/usuarios/modi/{$registro['id']}\"><i class=\"bi bi-pencil-square\"></i></a>";
+
                         echo "
                             <tr>
-                                <td></td>
+                                <td>{$modificacion}</td>
                                 <td>".$registro['id']."</td>
                                 <td>".$registro['nombre']."</td>
                                 <td>".$registro['apellido1']."</td>
