@@ -161,6 +161,8 @@
 
 
                                 break;
+
+
                             }
                             
                         }
@@ -239,6 +241,22 @@
 
                 break;
 
+                case 'elim':
+                    $id = $_GET['pagina'];
+
+                    define("OPERACION", $_GET ['oper']=='elim');
+
+                    $query = new Query("
+                              DELETE FROM usuarios
+                              WHERE id = '{$id}'
+                          
+                                    ");
+
+                                break;
+
+
+    
+
                 default:
                     $query = new Query("
                         SELECT count(*) as total_registros
@@ -274,7 +292,7 @@
                     <table style=\"margin-top:15px\" class=\"table\">
                         <thead>
                             <tr>
-                                <th scope=\"col\">#</th>
+                                <th scope=\"col\">Editar</th>
                                 <th scope=\"col\">ID</th>
                                 <th scope=\"col\">Nombre</th>
                                 <th scope=\"col\">Apellido1</th>
@@ -287,26 +305,33 @@
                     ";
 
 
-
+                    
 
                     while ($registro = $query->recuperar())
                     {
 
                         $modificacion = "<a class=\"theme-primary btn-solid btn-styled\" href=\"/usuarios/modi/{$registro['id']}\"><i class=\"bi bi-pencil-square\"></i></a>";
 
+                        $eliminar = "<a class=\"theme-primary btn-solid btn-styled\" href=\"/usuarios/elim/{$registro['id']}\"><i class=\"bi bi-trash\"></i></a>";
+                        
+
                         echo "
                             <tr>
                                 <td>{$modificacion}</td>
+                                
                                 <td>".$registro['id']."</td>
                                 <td>".$registro['nombre']."</td>
                                 <td>".$registro['apellido1']."</td>
                                 <td>".$registro['apellido2']."</td>
                                 <td>".formato_DDMMAAAA($registro['fecha_nacimiento'])."</td>
                                 <td>".$registro['email']."</td>
+                                <td>{$eliminar}</td>
                             </tr>
                         
                         
                         ";
+
+                        
                         
                     }
 
