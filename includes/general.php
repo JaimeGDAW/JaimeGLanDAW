@@ -1,15 +1,17 @@
 <?php
 
+ob_start();
 
 
 define('TOTAL_PAGINAS_LISTADO', 10);
 
 spl_autoload_register(function ($class_name) {
 
-    $subdirectorio = '';
-    if ($class_name == 'BBDD' or $class_name == 'Query')
+    $subdirectorio = 'modelo/';
+    if ($class_name == 'BBDD' || $class_name == 'Query')
         $subdirectorio = 'bbdd/';
-
+    elseif($class_name == 'Template')
+        $subdirectorio = '';
 
 
 

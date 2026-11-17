@@ -5,32 +5,57 @@
 
     echo Template::header('Lanzarote');
 
+    $usuario = new Usuario();
+
     switch($_GET['seccion'])
     {
         case 'usuarios':
             //Cargamos la sección usuarios
 
-            $url_form = '/usuarios/alta';
+            $url_form = '/usuarios/'.$_GET['oper'];
+
+            
+            
+
             switch($_GET ['oper'])
             {
-                case 'modi':
 
-                    
+                case 'baja':
+
+                    $operacion = 'Eliminación';
+
 
                     $id = $_GET['pagina'];
 
-                    $url_form = '/usuarios/modi/'.$id;
 
-                case 'alta':
+                   
+
+
+                case 'modi':
+
+
+                    $operacion = empty($operacion)? 'Modificación': $operacion;
+
+                    $id = $_GET['pagina'];
+
+                    $url_form .= '/'.$id;
 
                     
 
-                    define("OPERACION", $_GET ['oper']=='modi'?'Modificación': 'Alta' );
+                    
+
+
+                case 'alta':
+                    $operacion = empty($operacion)? 'Alta': $operacion;
+
+                    
+
+                    define("OPERACION", $operacion);
 
                     $boton_alta = "<input type=\"submit\" class=\"theme-primary btn-solid btn-styled\" value=\"". OPERACION ." de usuario\" />";
                     
                     $errores = false;
-                    $disabled = '';
+                    $disabled = $_GET['oper'] == 'baja'?  " readonly=\"readonly\" " : '';
 
                     if($_POST['paso'] == '1')
                     {
@@ -107,57 +132,23 @@
                             switch($_GET['oper'])
                             {
                                 case 'alta':
-                                    $query = new Query("
-                                        INSERT INTO usuarios
-                                        (
-                                            nombre    
-                                            ,apellido1 
-                                            ,apellido2 
-                                            ,fecha_nacimiento 
-                                            ,email 
+                                    $usuario->insertar($_POST);
 
-                                            ,fecha_alta   
-                                            ,ip_alta      
-                                            ,fecha_modi   
-                                            ,ip_modi      
-                                        )
-                                        VALUES
-                                        (
-                                            '". $_POST['nombre']           ."'
-                                            ,'". $_POST['apellido1']        ."'
-                                            ,'". $_POST['apellido2']        ."'
-                                            ,'". $_POST['fecha_nacimiento'] ."'
-                                            ,'". $_POST['email']            ."'
-
-
-                                            ,now()
-                                            ,'". $_SERVER['SERVER_ADDR']    ."'
-                                            ,now()
-                                            ,'". $_SERVER['SERVER_ADDR']    ."'
-                                            
-                                        )
-                                    
-                                    ");
                                 break;
                                 case 'modi':
+                                    $usuario->modificar($_POST);
+                                break;
 
-                                    $query = new Query("
-                                        UPDATE usuarios
+                                case 'baja':
 
-                                        SET
-                                             nombre             = '". $_POST['nombre']           ."'
-                                            ,apellido1          = '". $_POST['apellido1']        ."'
-                                            ,apellido2          = '". $_POST['apellido2']        ."'
-                                            ,fecha_nacimiento   = '". $_POST['fecha_nacimiento'] ."'
-                                            ,email              = '". $_POST['email']            ."'
+                                    echo "Aquí tendremos que eliminar";
 
-                                            ,fecha_modi         = now()
-                                            ,ip_modi            = '". $_SERVER['SERVER_ADDR']    ."'
+                                    $usuario->eliminar($_POST['id']);
 
-                                        WHERE id = '{$id}'
-                                    
-                                    ");
 
+                                    ob_clean();
+                                    header("Location: /usuarios/listado/0");
+                                    exit;
 
 
                                 break;
@@ -258,9 +249,10 @@
                         SELECT * 
                         FROM usuarios
 
-                        
+                        ORDER BY fecha_alta DESC
                         LIMIT ". TOTAL_PAGINAS_LISTADO ."
                         OFFSET ". ($_GET['pagina'] * TOTAL_PAGINAS_LISTADO )  ."
+                        
                         ;
                     ");
 
@@ -292,11 +284,12 @@
                     while ($registro = $query->recuperar())
                     {
 
-                        $modificacion = "<a class=\"theme-primary btn-solid btn-styled\" href=\"/usuarios/modi/{$registro['id']}\"><i class=\"bi bi-pencil-square\"></i></a>";
+                        $modificacion = "<a class=\"btn-solid theme-primary\" href=\"/usuarios/modi/{$registro['id']}\"><i class=\"bi bi-pencil-square\"></i></a>";
+                        $baja         = "<a class=\"btn-solid theme-danger\" href=\"/usuarios/baja/{$registro['id']}\"><i class=\"bi bi-trash\"></i></a>";
 
                         echo "
                             <tr>
-                                <td>{$modificacion}</td>
+                                <td>{$modificacion} {$baja}</td>
                                 <td>".$registro['id']."</td>
                                 <td>".$registro['nombre']."</td>
                                 <td>".$registro['apellido1']."</td>
