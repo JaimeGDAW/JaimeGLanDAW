@@ -14,7 +14,6 @@ spl_autoload_register(function ($class_name) {
         $subdirectorio = '';
 
 
-
     require_once "includes/{$subdirectorio}class.". strtolower($class_name) .'.php';
 });
 
