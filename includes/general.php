@@ -1,19 +1,36 @@
 <?php
 
+ob_start();
 
 
 define('TOTAL_PAGINAS_LISTADO', 10);
 
 spl_autoload_register(function ($class_name) {
 
-    $subdirectorio = '';
-    if ($class_name == 'BBDD' or $class_name == 'Query')
-        $subdirectorio = 'bbdd/';
+    $subdirectorio = 'modelo/';
 
 
+    switch($class_name)
+    {
+        case 'BBDD':
+        case 'Query':
+            $subdirectorio = 'bbdd/';
+        break;
 
+        case 'Template':
+        case 'Idioma':
+            $subdirectorio = '';
+        break;
 
+        default:
+            $subdirectorio = 'modelo/';
+        break;
+
+    }
     require_once "includes/{$subdirectorio}class.". strtolower($class_name) .'.php';
+
+
+    
 });
 
 
