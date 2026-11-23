@@ -22,7 +22,7 @@
 
                 case 'baja':
 
-                    $operacion = 'Eliminación';
+                    $operacion = Idioma::lit('eliminacion');
 
 
                     $id = $_GET['pagina'];
@@ -34,7 +34,7 @@
                 case 'modi':
 
 
-                    $operacion = empty($operacion)? 'Modificación': $operacion;
+                    $operacion = empty($operacion)? Idioma::lit('modificacion'): $operacion;
 
                     $id = $_GET['pagina'];
 
@@ -46,7 +46,7 @@
 
 
                 case 'alta':
-                    $operacion = empty($operacion)? 'Alta': $operacion;
+                    $operacion = empty($operacion)? Idioma::lit('alta'): $operacion;
 
                     
 
@@ -66,7 +66,7 @@
                         {
 
                             $_error_nombre = 'error';
-                            $_texto_errores = '<p>- El nombre debe tener al menos 3 caracteres.</p>';
+                            $_texto_errores = '<p>- '. sprintf(Idioma::lit('error_caracteres'),'nombre','3') .'.</p>';
                             
                             $errores = true;
                         }
@@ -75,7 +75,7 @@
                         {
 
                             $_error_apellido1 = 'error';
-                            $_texto_errores .= '<p>- El primer apellido debe tener al menos 3 caracteres.</p>';
+                            $_texto_errores .= '<p>- '. sprintf(Idioma::lit('error_caracteres'),'Primer Apellido','3') .'.</p>';
                             
                             $errores = true;
                         }
@@ -84,7 +84,7 @@
                         {
 
                             $_error_apellido2 = 'error';
-                            $_texto_errores .= '<p>- El segundo apellido debe tener al menos 3 caracteres.</p>';
+                            $_texto_errores .= '<p>- '. sprintf(Idioma::lit('error_caracteres'),'Segundo Apellido','3') .'.</p>';
                             
                             $errores = true;
                         }
@@ -94,7 +94,7 @@
                         {
 
                             $_error_fecha_nacimiento = 'error';
-                            $_texto_errores .= '<p>- La fecha de nacimiento no tiene un formato válido.</p>';
+                            $_texto_errores .= '<p>- '. sprintf(Idioma::lit('error_formato_invalido'),'Fecha Nacimiento') .'.</p>';
                             
                             $errores = true;
                         }
@@ -103,7 +103,7 @@
                         {
 
                             $_error_email = 'error';
-                            $_texto_errores .= '<p>- El E-mail no tiene un formato válido.</p>';
+                            $_texto_errores .= '<p>- '. sprintf(Idioma::lit('error_formato_invalido'),'E-mail') .'.</p>';
                             
                             $errores = true;
                         }
@@ -121,7 +121,7 @@
                         {
                             $mensaje_exito = "
                                 <div class=\"alert theme-success  mb-5 mt-5\" role=\"alert\">
-                                    <p>Operación realizada con éxito</p>
+                                    <p>". Idioma::lit('operacion_exito') ."</p>
                                 </div>
                             ";
                             $boton_alta = '';
@@ -158,7 +158,6 @@
 
                                 case 'baja':
 
-                                    echo "Aquí tendremos que eliminar";
 
                                     $usuario->eliminar($_POST['id']);
 
@@ -196,28 +195,28 @@
                             <input type=\"hidden\" name=\"id\" value=\"{$_POST['id']}\" />
 
                             <div class=\"form-field mb-4 {$_error_nombre}\">
-                                <label for=\"nombreID\" class=\"form-label\">Nombre</label>
-                                <input {$disabled} type=\"text\" name=\"nombre\" class=\"form-control\" id=\"nombreID\" value=\"{$_POST['nombre']}\" placeholder=\"Introduce tu nombre\">
+                                <label for=\"nombreID\" class=\"form-label\">". Idioma::lit('nombre') ."</label>
+                                <input {$disabled} type=\"text\" name=\"nombre\" class=\"form-control\" id=\"nombreID\" value=\"{$_POST['nombre']}\" placeholder=\"". sprintf(Idioma::lit('introduce_tu'),'nombre') ."\">
                             </div>
 
                             <div class=\"form-field mb-4 {$_error_apellido1}\">
-                                <label for=\"apellido1ID\" class=\"form-label\">Primer apellido</label>
-                                <input {$disabled} type=\"text\" name=\"apellido1\" class=\"form-control\" id=\"apellido1ID\" value=\"{$_POST['apellido1']}\" placeholder=\"Introduce tu primer apellido\">
+                                <label for=\"apellido1ID\" class=\"form-label\">". Idioma::lit('apellido1') ."</label>
+                                <input {$disabled} type=\"text\" name=\"apellido1\" class=\"form-control\" id=\"apellido1ID\" value=\"{$_POST['apellido1']}\" placeholder=\"". sprintf(Idioma::lit('introduce_tu'),'Primer Apellido') ."\">
                             </div>
 
                             <div class=\"form-field mb-4 {$_error_apellido2}\">
-                                <label for=\"apellido2ID\" class=\"form-label\">Segundo apellido</label>
-                                <input {$disabled} type=\"text\" name=\"apellido2\" class=\"form-control\" id=\"apellido2ID\" value=\"{$_POST['apellido2']}\" value=\"{$_POST['nombre']}\" placeholder=\"Introduce tu segundo apellido\">
+                                <label for=\"apellido2ID\" class=\"form-label\">". Idioma::lit('apellido2') ."</label>
+                                <input {$disabled} type=\"text\" name=\"apellido2\" class=\"form-control\" id=\"apellido2ID\" value=\"{$_POST['apellido2']}\" value=\"{$_POST['nombre']}\" placeholder=\"". sprintf(Idioma::lit('introduce_tu'),'Segundo apellido') ."\">
                             </div>
 
                             <div class=\"form-field mb-4 {$_error_fecha_nacimiento}\">
-                                <label for=\"fecha_nacimientoID\" class=\"form-label\">Fecha nacimiento</label>
-                                <input {$disabled} type=\"date\" name=\"fecha_nacimiento\" class=\"form-control\" id=\"fecha_nacimientoID\" value=\"{$_POST['fecha_nacimiento']}\" placeholder=\"nombre@dominio.com\">
+                                <label for=\"fecha_nacimientoID\" class=\"form-label\">". Idioma::lit('fecha_nacimiento') ."</label>
+                                <input {$disabled} type=\"date\" name=\"fecha_nacimiento\" class=\"form-control\" id=\"fecha_nacimientoID\" value=\"{$_POST['fecha_nacimiento']}\" >
                             </div>
 
                             <div class=\"form-field mb-4 {$_error_email}\">
-                                <label for=\"emailID\" class=\"form-label\">Email</label>
-                                <input {$disabled} type=\"email\" name=\"email\" class=\"form-control\" id=\"emailID\" value=\"{$_POST['email']}\" placeholder=\"nombre@dominio.com\">
+                                <label for=\"emailID\" class=\"form-label\">". Idioma::lit('email') ."</label>
+                                <input {$disabled} type=\"email\" name=\"email\" class=\"form-control\" id=\"emailID\" value=\"{$_POST['email']}\" placeholder=\"". Idioma::lit('email_generico') ."\">
                             </div>
 
                             {$boton_alta}
@@ -246,7 +245,7 @@
 
                     echo "
                     <a href=\"/usuarios/alta\" class=\"theme-primary btn-solid btn-styled\">
-                        Alta de Usuario <i class=\"bi bi-plus-lg\"></i>
+                        ". Idioma::lit('alta_usuario') ." <i class=\"bi bi-plus-lg\"></i>
                     </a>
                     
                     <table style=\"margin-top:15px\" class=\"table\">
@@ -254,11 +253,11 @@
                             <tr>
                                 <th scope=\"col\">#</th>
                                 <th scope=\"col\">ID</th>
-                                <th scope=\"col\">Nombre</th>
-                                <th scope=\"col\">Apellido1</th>
-                                <th scope=\"col\">Apellido2</th>
-                                <th scope=\"col\">Fecha Nacimiento</th>
-                                <th scope=\"col\">E-mail</th>
+                                <th scope=\"col\">". Idioma::lit('nombre') ."</th>
+                                <th scope=\"col\">". Idioma::lit('apellido1') ."</th>
+                                <th scope=\"col\">". Idioma::lit('apellido2') ."</th>
+                                <th scope=\"col\">". Idioma::lit('fecha_nacimiento') ."</th>
+                                <th scope=\"col\">". Idioma::lit('email') ."</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -292,7 +291,7 @@
                     $url_anterior = '';
                     if ($_GET['pagina'] != "0")
                     {   $pagina_anterior = $_GET['pagina'] - 1;
-                        $url_anterior = "<li class=\"page-item\"><a class=\"page-link\" href=\"/usuarios/listado/{$pagina_anterior}\">Anterior</a></li>";
+                        $url_anterior = "<li class=\"page-item\"><a class=\"page-link\" href=\"/usuarios/listado/{$pagina_anterior}\">".Idioma::lit('anterior')."</a></li>";
                     }
 
 
@@ -302,7 +301,7 @@
                     if($total_registros > (($_GET['pagina'] + 1) * TOTAL_PAGINAS_LISTADO))
                     {
                         $pagina_siguiente = $_GET['pagina'] + 1;
-                        $url_siguiente = "<li class=\"page-item\"><a class=\"page-link\" href=\"/usuarios/listado/{$pagina_siguiente}\">Siguiente</a></li>";
+                        $url_siguiente = "<li class=\"page-item\"><a class=\"page-link\" href=\"/usuarios/listado/{$pagina_siguiente}\">".Idioma::lit('siguiente')."</a></li>";
                     }
                 break;
 
