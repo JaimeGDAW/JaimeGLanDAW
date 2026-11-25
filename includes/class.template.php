@@ -43,6 +43,9 @@ class Template{
 
     static function navegacion()
     {
+        // Port for the language links: empty on port 80 (school), ":8080" on my Mac
+        $puerto = ($_SERVER['SERVER_PORT'] == 80) ? '' : ':' . $_SERVER['SERVER_PORT'];
+
         return "
             <header class=\"site-header\">
                 <nav class=\"navbar lg:navbar-expand\" aria-label=\"Main\">
@@ -83,8 +86,9 @@ class Template{
                             </button>
                         </div>
                         <div class=\"idiomas\">
-                            <a href=\"http://en.lanzarote.lan/\"><img  src=\"/img/flags/en.svg\" /></a>
-                            <a href=\"http://www.lanzarote.lan/\"><img  src=\"/img/flags/es.svg\" /></a>
+                            <a href=\"http://en.lanzarote.lan{$puerto}/\"><img  src=\"/img/flags/en.svg\" /></a>
+                            <a href=\"http://www.lanzarote.lan{$puerto}/\"><img  src=\"/img/flags/es.svg\" /></a>
+                            <a href=\"http://de.lanzarote.lan{$puerto}/\"><img  src=\"/img/flags/de.svg\" /></a>
                         </div>
                     </div>
                 </nav>
